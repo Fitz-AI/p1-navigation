@@ -2,14 +2,14 @@ import numpy as np
 import random
 from collections import namedtuple, deque
 
-from model import QNetwork
+from DQNN import QNetwork
 
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
 BUFFER_SIZE = int(1e5)  # replay buffer size
-BATCH_SIZE = 64         # minibatch size
+BATCH_SIZE = 64        # minibatch size
 GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR = 5e-4               # learning rate 
@@ -85,13 +85,19 @@ class Agent():
         """
         states, actions, rewards, next_states, dones = experiences
 
-        # Get max predicted Q values (for next states) from target model
-        Q_targets_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
-        # Compute Q targets for current states 
-        Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
+        #For DQN
+        #Q_targets_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
+        #Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
+        #Q_expected = self.qnetwork_local(states).gather(1, actions)
 
-        # Get expected Q values from local model
-        Q_expected = self.qnetwork_local(states).gather(1, actions)
+        # For Double DQN : Q(s,a) = r(s,a) + gamma*Q(s',argmax_aQ(s',a))
+        #argmax_aQ(s',a)
+        max_actions = self.qnetwork_local(next_states).detach().argmax(dim=1, keepdim=True)
+        #Q(s',argmax_aQ(s',a))
+        Q_targets_next = self.qnetwork_target(next_states).detach().gather(dim=1, index=max_actions)
+        #Q(s,a)
+        Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
+        Q_expected = self.qnetwork_local(states).gather(dim=1, index=actions)
 
         # Compute loss
         loss = F.mse_loss(Q_expected, Q_targets)
