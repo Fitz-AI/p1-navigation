@@ -109,7 +109,7 @@ import torch
 from collections import deque
 import matplotlib.pyplot as plt
 %matplotlib inline
-from dqn_agent import Agent
+from Dqn_agent import Agent
 ```
 
 
