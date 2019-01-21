@@ -42,22 +42,6 @@ class QNetwork(nn.Module):
         return x_adv + x_val
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    <ipython-input-14-45bbdb7e86f3> in <module>
-    ----> 1 class QNetwork(nn.Module):
-          2 
-          3     def __init__(self, state_size, action_size, seed):
-          4         super(QNetwork, self).__init__()
-          5         self.seed = torch.manual_seed(seed)
-    
-
-    NameError: name 'nn' is not defined
-
-
 ### Double DQN
 
 
