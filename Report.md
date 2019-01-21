@@ -97,7 +97,7 @@ UPDATE_EVERY = 4        # how often to update the network
 
 We set eps_start=1.0, eps_end=0.01 and eps_decay=0.99. We have:
 
-![Alt text](p1-navigation.png?raw=true)
+![Alt text](https://github.com/Quertier/p1-navigation/blob/master/p1-navigation.PNG)
 
 If you want to test it by yourself :) 
 
