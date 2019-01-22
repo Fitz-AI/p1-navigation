@@ -22,6 +22,10 @@ As reinforcement learning, I started with a Deep Q-Network agent. To improve the
 
 ### Dueling DQN
 
+The algorithm Dueling DQN can learn which states are valuable without having to learn the effect of each action at each state. If we set V(s) the state value at state s and A(s,a) the advantage of taking action a at state s then we have:
+
+![Alt text](https://github.com/Quertier/p1-navigation/blob/master/Images/Dueling_DQN.png)
+
 
 ```python
 class QNetwork(nn.Module):
@@ -43,6 +47,10 @@ class QNetwork(nn.Module):
 ```
 
 ### Double DQN
+
+The aim of Double DQN is to reduce overestimations by decomposing the max operation in the target into action selection and action evaluation.
+
+![Alt text](https://github.com/Quertier/p1-navigation/blob/master/Images/Double_DQN.png)
 
 
 ```python
