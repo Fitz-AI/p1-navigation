@@ -37,3 +37,69 @@ The task is episodic, and in order to solve the environment, your agent must get
 ### Instructions
 
 Follow the instructions in `Navigation.ipynb` to get started with training your own agent! 
+
+### Test the agent
+
+If you want to test it by yourself :) 
+
+```python
+!pip -q install ./python
+```
+
+```python
+from unityagents import UnityEnvironment
+import numpy as np
+import torch
+from collections import deque
+import matplotlib.pyplot as plt
+%matplotlib inline
+from Dqn_agent import Agent
+```
+
+
+```python
+env = UnityEnvironment(file_name="Banana_Windows_x86_64/Banana.exe")
+```
+
+    INFO:unityagents:
+    'Academy' started successfully!
+    Unity Academy name: Academy
+            Number of Brains: 1
+            Number of External Brains : 1
+            Lesson number : 0
+            Reset Parameters :
+    		
+    Unity brain name: BananaBrain
+            Number of Visual Observations (per agent): 0
+            Vector Observation space type: continuous
+            Vector Observation space size (per agent): 37
+            Number of stacked Vector Observation: 1
+            Vector Action space type: discrete
+            Vector Action space size (per agent): 4
+            Vector Action descriptions: , , , 
+    
+
+
+```python
+brain_name = env.brain_names[0] # get the name of the brains from the Unity environment
+brain = env.brains[brain_name]
+env_info = env.reset(train_mode=False)[brain_name] # reset the environment and obtain info on state/action space
+
+# initialize agent with state size and action size.
+agent = Agent(len(env_info.vector_observations[0]), brain.vector_action_space_size, seed=0)
+
+# load the trained weights
+agent.qnetwork_local.load_state_dict(torch.load('Dueling_model.pth'))
+
+state = env_info.vector_observations[0]  # get the first state
+score = 0 # initialize the score
+while True: # loop until the episode ends
+    action = agent.act(state, 0).astype(np.int32) # select a greedy action
+    env_info = env.step(action)[brain_name] # take that action
+    score += env_info.rewards[0] # update the score with the reward for taking that action
+    next_state = env_info.vector_observations[0] # the next state
+    state = next_state # set current state to next state
+    done = env_info.local_done[0] # get the value of the done bool, indicating the episode is over
+    # end episode if done is true
+    if done:
+        break
